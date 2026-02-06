@@ -4,29 +4,31 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown, Send, Settings, Cloud, Code2 } from 'lucide-react';
+import { useCreateRun } from '@/hooks/use-runs';
+import { ChevronDown, Send, Settings, Cloud, Code2, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const NewRun = () => {
   const navigate = useNavigate();
   const [request, setRequest] = useState('');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const createRun = useCreateRun();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!request.trim()) return;
 
-    setIsSubmitting(true);
-    
-    // Simulate API call - in production this would POST /runs
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Navigate to the new run's detail page
-    navigate('/runs/run-001');
+    try {
+      const run = await createRun.mutateAsync(request);
+      navigate(`/runs/${run.id}`);
+    } catch (error) {
+      // Error is handled by mutation state
+      console.error('Failed to create run:', error);
+    }
   };
 
-  const canSubmit = request.trim().length > 10;
+  const canSubmit = request.trim().length > 10 && !createRun.isPending;
 
   return (
     <AppLayout>
@@ -39,6 +41,19 @@ const NewRun = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Error Message */}
+          {createRun.isError && (
+            <div className="flex items-center gap-3 p-4 rounded-lg border border-destructive/50 bg-destructive/10">
+              <AlertCircle className="h-5 w-5 text-destructive shrink-0" />
+              <div>
+                <p className="text-sm font-medium text-foreground">Failed to start run</p>
+                <p className="text-xs text-muted-foreground">
+                  {createRun.error?.message || 'Please try again'}
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Main Request Input */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-foreground">
@@ -49,6 +64,7 @@ const NewRun = () => {
               onChange={(e) => setRequest(e.target.value)}
               placeholder="Describe your software requirements in natural language. Be specific about functionality, APIs, data models, and any integrations needed..."
               className="min-h-[200px] resize-none bg-card border-border focus:border-primary text-foreground placeholder:text-muted-foreground font-mono text-sm"
+              disabled={createRun.isPending}
             />
             <p className="text-xs text-muted-foreground">
               {request.length} characters · Minimum 10 required
@@ -112,10 +128,10 @@ const NewRun = () => {
           <div className="flex justify-end pt-4">
             <Button
               type="submit"
-              disabled={!canSubmit || isSubmitting}
+              disabled={!canSubmit}
               className="min-w-[140px] glow-primary"
             >
-              {isSubmitting ? (
+              {createRun.isPending ? (
                 <>
                   <span className="h-4 w-4 mr-2 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
                   Starting...
