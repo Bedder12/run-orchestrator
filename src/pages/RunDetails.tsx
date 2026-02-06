@@ -1,5 +1,4 @@
 import { useParams, Link } from 'react-router-dom';
-import { useState } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { WorkflowTimeline } from '@/components/run/WorkflowTimeline';
 import { ValidationDashboard } from '@/components/run/ValidationDashboard';
@@ -9,17 +8,72 @@ import { ApprovalGate } from '@/components/run/ApprovalGate';
 import { DeploymentStatus } from '@/components/run/DeploymentStatus';
 import { StatusBadge } from '@/components/StatusBadge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { getRunById } from '@/lib/mock-data';
-import { ArrowLeft, Clock } from 'lucide-react';
+import { useRun, useRunSubscription, useApproveRun, useRejectRun, useDeployRun } from '@/hooks/use-runs';
+import { ArrowLeft, Clock, AlertCircle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 
 const RunDetails = () => {
   const { id } = useParams<{ id: string }>();
-  const run = getRunById(id || '');
   
-  const [isApproving, setIsApproving] = useState(false);
-  const [isDeploying, setIsDeploying] = useState(false);
+  const { data: run, isLoading, error } = useRun(id || '');
+  useRunSubscription(id || '');
+  
+  const approveRun = useApproveRun();
+  const rejectRun = useRejectRun();
+  const deployRun = useDeployRun();
 
+  const handleApprove = async () => {
+    if (!id) return;
+    await approveRun.mutateAsync(id);
+  };
+
+  const handleReject = async () => {
+    if (!id) return;
+    await rejectRun.mutateAsync(id);
+  };
+
+  const handleDeploy = async () => {
+    if (!id) return;
+    await deployRun.mutateAsync(id);
+  };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <AppLayout>
+        <div className="p-6 max-w-7xl mx-auto">
+          <div className="animate-pulse space-y-6">
+            <div className="h-4 w-32 bg-muted rounded" />
+            <div className="h-8 w-64 bg-muted rounded" />
+            <div className="flex gap-6">
+              <div className="w-56 h-96 bg-muted rounded" />
+              <div className="flex-1 h-96 bg-muted rounded" />
+            </div>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <AppLayout>
+        <div className="p-6 max-w-6xl mx-auto">
+          <div className="flex flex-col items-center justify-center py-16">
+            <AlertCircle className="h-12 w-12 text-destructive mb-4" />
+            <h2 className="text-xl font-semibold text-foreground mb-2">Failed to load run</h2>
+            <p className="text-muted-foreground mb-4">{error.message}</p>
+            <Link to="/" className="text-primary hover:underline">
+              Back to Dashboard
+            </Link>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
+
+  // Not found state
   if (!run) {
     return (
       <AppLayout>
@@ -35,25 +89,6 @@ const RunDetails = () => {
       </AppLayout>
     );
   }
-
-  const handleApprove = async () => {
-    setIsApproving(true);
-    // Simulate API call - POST /runs/{id}/approve
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsApproving(false);
-  };
-
-  const handleReject = async () => {
-    // Simulate API call
-    console.log('Rejecting run:', id);
-  };
-
-  const handleDeploy = async () => {
-    setIsDeploying(true);
-    // Simulate API call - POST /runs/{id}/deploy
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsDeploying(false);
-  };
 
   return (
     <AppLayout>
@@ -105,7 +140,7 @@ const RunDetails = () => {
                 summary={run.approvalSummary}
                 onApprove={handleApprove}
                 onReject={handleReject}
-                isLoading={isApproving}
+                isLoading={approveRun.isPending}
               />
             )}
 
@@ -143,7 +178,7 @@ const RunDetails = () => {
             <DeploymentStatus
               deployment={run.deployment}
               onDeploy={handleDeploy}
-              isDeploying={isDeploying}
+              isDeploying={deployRun.isPending}
             />
           </div>
         </div>
