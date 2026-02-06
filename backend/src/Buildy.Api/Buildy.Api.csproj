@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Buildy.Application/Buildy.Application.csproj" />
+    <ProjectReference Include="../Buildy.Domain/Buildy.Domain.csproj" />
+    <ProjectReference Include="../Buildy.Shared/Buildy.Shared.csproj" />
+    <ProjectReference Include="../Buildy.Infrastructure/Buildy.Infrastructure.csproj" />
+    <ProjectReference Include="../Buildy.Agents/Buildy.Agents.csproj" />
+    <ProjectReference Include="../Buildy.Validation/Buildy.Validation.csproj" />
+  </ItemGroup>
+</Project>
