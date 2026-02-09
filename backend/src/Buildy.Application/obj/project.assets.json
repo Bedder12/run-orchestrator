@@ -1,0 +1,136 @@
+{
+  "version": 3,
+  "targets": {
+    "net8.0": {
+      "Buildy.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Buildy.Shared": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Buildy.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Buildy.Domain.dll": {}
+        }
+      },
+      "Buildy.Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/Buildy.Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Buildy.Shared.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Buildy.Domain/1.0.0": {
+      "type": "project",
+      "path": "../Buildy.Domain/Buildy.Domain.csproj",
+      "msbuildProject": "../Buildy.Domain/Buildy.Domain.csproj"
+    },
+    "Buildy.Shared/1.0.0": {
+      "type": "project",
+      "path": "../Buildy.Shared/Buildy.Shared.csproj",
+      "msbuildProject": "../Buildy.Shared/Buildy.Shared.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0": [
+      "Buildy.Domain >= 1.0.0",
+      "Buildy.Shared >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\bedde\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\run-orchestrator\\backend\\src\\Buildy.Application\\Buildy.Application.csproj",
+      "projectName": "Buildy.Application",
+      "projectPath": "C:\\run-orchestrator\\backend\\src\\Buildy.Application\\Buildy.Application.csproj",
+      "packagesPath": "C:\\Users\\bedde\\.nuget\\packages\\",
+      "outputPath": "C:\\run-orchestrator\\backend\\src\\Buildy.Application\\obj\\",
+      "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\bedde\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "projectReferences": {
+            "C:\\run-orchestrator\\backend\\src\\Buildy.Domain\\Buildy.Domain.csproj": {
+              "projectPath": "C:\\run-orchestrator\\backend\\src\\Buildy.Domain\\Buildy.Domain.csproj"
+            },
+            "C:\\run-orchestrator\\backend\\src\\Buildy.Shared\\Buildy.Shared.csproj": {
+              "projectPath": "C:\\run-orchestrator\\backend\\src\\Buildy.Shared\\Buildy.Shared.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      },
+      "SdkAnalysisLevel": "10.0.100"
+    },
+    "frameworks": {
+      "net8.0": {
+        "targetAlias": "net8.0",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[8.0.22, 8.0.22]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[8.0.22, 8.0.22]"
+          },
+          {
+            "name": "Microsoft.WindowsDesktop.App.Ref",
+            "version": "[8.0.22, 8.0.22]"
+          }
+        ],
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Users\\bedde\\.dotnet\\sdk\\10.0.101/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}
